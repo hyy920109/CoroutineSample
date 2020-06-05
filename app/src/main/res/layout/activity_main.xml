@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/global_scope"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Global Scope"
+        android:textAllCaps="false"
+        android:layout_marginTop="@dimen/margin_normal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/run_blocking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Run Blocking"
+        android:textAllCaps="false"
+        app:layout_constraintTop_toBottomOf="@+id/global_scope"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/margin_normal"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/coroutine_scope"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Coroutine Scope"
+        android:textAllCaps="false"
+        android:layout_marginTop="@dimen/margin_normal"
+        app:layout_constraintTop_toBottomOf="@+id/run_blocking"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/cancel_coroutine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel Coroutine"
+        android:textAllCaps="false"
+        android:layout_marginTop="@dimen/margin_normal"
+        app:layout_constraintTop_toBottomOf="@+id/coroutine_scope"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/concat_suspend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Concat_suspend"
+        android:textAllCaps="false"
+        android:layout_marginTop="@dimen/margin_normal"
+        app:layout_constraintTop_toBottomOf="@+id/cancel_coroutine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dispatcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dispatchers"
+        android:textAllCaps="false"
+        android:layout_marginTop="@dimen/margin_normal"
+        app:layout_constraintTop_toBottomOf="@+id/cancel_coroutine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/flow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Flow"
+        android:textAllCaps="false"
+        app:layout_constraintTop_toBottomOf="@+id/dispatcher"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
