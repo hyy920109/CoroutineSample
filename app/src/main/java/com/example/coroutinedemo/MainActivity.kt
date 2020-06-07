@@ -41,7 +41,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.concatSuspend.setOnClickListener {
 //            testConcatSuspendLinear()
-            testConcatSuspendAsync()
+            runBlocking {
+                testConcatSuspendAsync()
+            }
         }
 
         //调度器
@@ -137,22 +139,40 @@ class MainActivity : AppCompatActivity() {
 
     //并发 挂起函数 让所有挂起函数能同时进行  async 可以通过将 start 参数设置为 CoroutineStart.LAZY 而变为惰性的
     //在惰性模式下，只有结果通过 await 获取的时候协程才会启动，或者在 Job 的 start 函数调用的时候
-    private fun testConcatSuspendAsync() {
-        runBlocking {
+    private suspend fun testConcatSuspendAsync() {
+        GlobalScope.launch(Dispatchers.IO) {
             println("start task")
-            val time = measureTimeMillis {
-                val one = async(start = CoroutineStart.LAZY) { doSomethingUsefulOne() }
-                val two = async { doSomethingUsefulTwo() }
-                println("The answer is ${one.await() + two.await()}")
+            println("runBlocking thread id--->${Thread.currentThread().id}")
+            launch {
+                println("launch thread id--->${Thread.currentThread().id}")
+                val time = measureTimeMillis {
+                    val one = async(start = CoroutineStart.LAZY) { doSomethingUsefulOne() }
+                    val two = async { doSomethingUsefulTwo() }
+                    println("The answer is ${one.await() + two.await()}")
+                }
+                println("Completed in $time ms")
             }
-            println("Completed in $time ms")
         }
+//        withContext(Dispatchers.IO) {
+//            println("start task")
+//            println("runBlocking thread id--->${Thread.currentThread().id}")
+//            launch {
+//                println("launch thread id--->${Thread.currentThread().id}")
+//                val time = measureTimeMillis {
+//                    val one = async(start = CoroutineStart.LAZY) { doSomethingUsefulOne() }
+//                    val two = async { doSomethingUsefulTwo() }
+//                    println("The answer is ${one.await() + two.await()}")
+//                }
+//                println("Completed in $time ms")
+//            }
+//
+//        }
     }
 
     //组合挂起函数 默认顺序调用
     private fun testConcatSuspendLinear() {
         //linear concat 顺序链接
-        runBlocking {
+        val i = runBlocking {
             println("start task")
             val time = measureTimeMillis {
                 val one = doSomethingUsefulOne()
@@ -165,7 +185,7 @@ class MainActivity : AppCompatActivity() {
 
     private suspend fun doSomethingUsefulOne(): Int {
         println("start do one task")
-        delay(1000L)
+        delay(1300L)
         return 12
     }
 
@@ -221,7 +241,7 @@ class MainActivity : AppCompatActivity() {
         //runBlocking会继承启动runBlocking的线程
         runBlocking {
             LogUtils.log(msg = "runBlocking Thread id is ${Thread.currentThread().id} ")
-
+            testThreadId()
             //launch 和 Dispatchers 有关系
             launch { //
                 LogUtils.log(msg = "launch Thread start id is ${Thread.currentThread().id} ")
@@ -243,15 +263,22 @@ class MainActivity : AppCompatActivity() {
             LogUtils.log(msg = "GlobalScope Thread id is ${Thread.currentThread().id} ")
             launch {
                 LogUtils.log(msg = "launch Thread start id is ${Thread.currentThread().id} ")
-
+                testThreadId()
                 //这里的delay时长如果大于 globalScope的delay时长 那么任务结束后 会复用globalScape的线程
-                delay(2100)
+               // delay(1800)
                 LogUtils.log(msg = "launch Thread end id is ${Thread.currentThread().id} ")
             }
+
+            LogUtils.log(msg = "runBlocking Thread id is ${Thread.currentThread().id} ")
+
             delay(2000)
             LogUtils.log(msg = "GlobalScope")
         }
         LogUtils.log(msg = "Hello")
     }
 
+    private suspend fun testThreadId() {
+        LogUtils.log(msg = "test Thread start id is ${Thread.currentThread().id} ")
+        delay(1000)
+    }
 }
