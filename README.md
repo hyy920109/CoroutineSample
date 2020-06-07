@@ -57,7 +57,7 @@ suspend fun concurrentSum(): Int = coroutineScope {
 }
 ```
 
-#### 协程上下文([CoroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/) )和调度器(CoroutineDispatcher)
+#### 协程上下文([CoroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/) )和调度器([CoroutineDispatcher](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-dispatcher/index.html))
 
 协程总是运行在CoroutineContext类型的上下文中，上下文一般都包含协程调度器（Dispatcher）， 协程调度器 则用来调度协程所在的线程。协程调度器有以下几种： **Dispatchers.IO   Dispatchers.Main  Dispatchers.Unconfined**
 
