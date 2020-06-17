@@ -4,10 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.coroutinedemo.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlin.system.measureTimeMillis
 
 class MainActivity : AppCompatActivity() {
@@ -53,38 +50,38 @@ class MainActivity : AppCompatActivity() {
 
         //流  类似于Rxjava
         binding.flow.setOnClickListener {
-            runBlocking {
+
+            GlobalScope.launch(Dispatchers.IO) {
                 testFlowIO()
-                //启动新的协程 以验证主线程并未阻塞
-//                launch {
-//                    for (i in 1..3) {
-//                        println("I'm nor blocked $i")
-//                        delay(500)
-//                    }
-//                }
-
-//                withContext(Dispatchers.IO) {
-//
-//                }
             }
-
 
         }
     }
 
     suspend fun testFlowIO() {
-        coroutineScope {
-            testFlow().map {
-                "response data is $it"
-            }.collect { value ->
+        println("start calling test flow")
+        val testFlow = testFlow()
+
+        println("start collect")
+        //流操作符map
+        testFlow.map {
+            //将int 转成 string
+            "response data is $it"
+        }
+            .take(2)//只取发射的数据的两个 限制只取2个
+            .collect { value ->
+                //收集数据
                 println(value)
             }
-        }
     }
 
+    //流是冷的  只有flow 调用了collect方法  flow里面的所有方法才会开始执行
     fun testFlow(): Flow<Int> = flow {
+        println("flow start")
         for (i in 1..3) {
             delay(500)
+            //发射数据
+            println("origin data is $i")
             emit(i)
         }
     }
@@ -265,7 +262,7 @@ class MainActivity : AppCompatActivity() {
                 LogUtils.log(msg = "launch Thread start id is ${Thread.currentThread().id} ")
                 testThreadId()
                 //这里的delay时长如果大于 globalScope的delay时长 那么任务结束后 会复用globalScape的线程
-               // delay(1800)
+                // delay(1800)
                 LogUtils.log(msg = "launch Thread end id is ${Thread.currentThread().id} ")
             }
 
